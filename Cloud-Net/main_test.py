@@ -22,39 +22,39 @@ def prediction():
     print("Number of input spectral bands = ", num_of_channels)
     print("Batch size = ", batch_sz)
 
-    imgs_mask_test = model.predict_generator(
-        generator=mybatch_generator_prediction(test_img, in_rows, in_cols, batch_sz, max_bit),
-        steps=np.ceil(len(test_img) / batch_sz))
+    imgs_mask_test = model.predict(
+        x=mybatch_generator_prediction(test_img, in_rows, in_cols, batch_sz, max_bit),
+        steps=int(np.ceil(len(test_img) / batch_sz)))
 
     print("Saving predicted cloud masks on disk... \n")
 
-    pred_dir = experiment_name + '_train_192_test_384'
+    pred_dir = experiment_name + '_train_192_test_192'
     if not os.path.exists(os.path.join(PRED_FOLDER, pred_dir)):
         os.mkdir(os.path.join(PRED_FOLDER, pred_dir))
 
     for image, image_id in zip(imgs_mask_test, test_ids):
         image = (image[:, :, 0]).astype(np.float32)
-        tiff.imsave(os.path.join(PRED_FOLDER, pred_dir, str(image_id)), image)
+        tiff.imwrite(os.path.join(PRED_FOLDER, pred_dir, str(image_id)), image)
 
 
-GLOBAL_PATH = 'path to 38-cloud dataset'
+GLOBAL_PATH = '/home/sharad/38-Cloud/38-Cloud_test'
 TRAIN_FOLDER = os.path.join(GLOBAL_PATH, 'Training')
 TEST_FOLDER = os.path.join(GLOBAL_PATH, 'Test')
 PRED_FOLDER = os.path.join(GLOBAL_PATH, 'Predictions')
 
 
-in_rows = 384
-in_cols = 384
-num_of_channels = 4
+in_rows = 192
+in_cols = 192
+num_of_channels = 3
 num_of_classes = 1
 batch_sz = 10
 max_bit = 65535  # maximum gray level in landsat 8 images
-experiment_name = "Cloud-Net_trained_on_38-Cloud_training_patches"
+experiment_name = "Cloud-Net"
 weights_path = os.path.join(GLOBAL_PATH, experiment_name + '.h5')
 
 
 # getting input images names
-test_patches_csv_name = 'test_patches_38-cloud.csv'
+test_patches_csv_name = 'test_patches_38-Cloud.csv'
 df_test_img = pd.read_csv(os.path.join(TEST_FOLDER, test_patches_csv_name))
 test_img, test_ids = get_input_image_names(df_test_img, TEST_FOLDER, if_train=False)
 

@@ -17,9 +17,9 @@ class ADAMLearningRateTracker(keras.callbacks.Callback):
         # lr_t = K.eval(optimizer.lr * (K.sqrt(1. - K.pow(optimizer.beta_2, t)) /
         #                               (1. - K.pow(optimizer.beta_1, t))))
         # print('\n***The last Actual Learning rate in this epoch is:', lr_t,'***\n')
-        print('\n***The last Basic Learning rate in this epoch is:', K.eval(optimizer.lr), '***\n')
+        print('\n***The last Basic Learning rate in this epoch is:', optimizer.learning_rate.numpy(), '***\n')
         # stops the training if the basic lr is less than or equal to end_learning_rate
-        if K.eval(optimizer.lr) <= self.end_lr:
+        if optimizer.learning_rate.numpy() <= self.end_lr:
             print("training is finished")
             self.model.stop_training = True
 
@@ -33,7 +33,7 @@ def get_input_image_names(list_names, directory_name, if_train=True):
         nred = 'red_' + filenames
         nblue = 'blue_' + filenames
         ngreen = 'green_' + filenames
-        nnir = 'nir_' + filenames
+        #nnir = 'nir_' + filenames
 
         if if_train:
             dir_type_name = "train"
@@ -51,11 +51,11 @@ def get_input_image_names(list_names, directory_name, if_train=True):
         fl_img_red = directory_name + '/' + dir_type_name + '_red/' + '{}.TIF'.format(nred)
         fl_img_green = directory_name + '/' + dir_type_name + '_green/' + '{}.TIF'.format(ngreen)
         fl_img_blue = directory_name + '/' + dir_type_name + '_blue/' + '{}.TIF'.format(nblue)
-        fl_img_nir = directory_name + '/' + dir_type_name + '_nir/' + '{}.TIF'.format(nnir)
+        #fl_img_nir = directory_name + '/' + dir_type_name + '_nir/' + '{}.TIF'.format(nnir)
         fl_img.append(fl_img_red)
         fl_img.append(fl_img_green)
         fl_img.append(fl_img_blue)
-        fl_img.append(fl_img_nir)
+        #fl_img.append(fl_img_nir)
 
         list_img.append(fl_img)
 

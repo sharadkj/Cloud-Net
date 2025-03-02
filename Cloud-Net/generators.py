@@ -28,11 +28,12 @@ def mybatch_generator_train(zip_list, img_rows, img_cols, batch_size, shuffle=Tr
             image_red = imread(file[0])
             image_green = imread(file[1])
             image_blue = imread(file[2])
-            image_nir = imread(file[3])
+            #image_nir = imread(file[3])
 
             mask = imread(mask)
 
-            image = np.stack((image_red, image_green, image_blue, image_nir), axis=-1)
+            #image = np.stack((image_red, image_green, image_blue, image_nir), axis=-1)
+            image = np.stack((image_red, image_green, image_blue), axis=-1)
 
             image = resize(image, (img_rows, img_cols), preserve_range=True, mode='symmetric')
             mask = resize(mask, (img_rows, img_cols), preserve_range=True, mode='symmetric')
@@ -87,11 +88,12 @@ def mybatch_generator_validation(zip_list, img_rows, img_cols, batch_size, shuff
             image_red = imread(file[0])
             image_green = imread(file[1])
             image_blue = imread(file[2])
-            image_nir = imread(file[3])
+            #image_nir = imread(file[3])
 
             mask = imread(mask)
 
-            image = np.stack((image_red, image_green, image_blue, image_nir), axis=-1)
+            #image = np.stack((image_red, image_green, image_blue, image_nir), axis=-1)
+            image = np.stack((image_red, image_green, image_blue), axis=-1)
 
             image = resize(image, (img_rows, img_cols), preserve_range=True, mode='symmetric')
             mask = resize(mask, (img_rows, img_cols), preserve_range=True, mode='symmetric')
@@ -127,9 +129,10 @@ def mybatch_generator_prediction(tstfiles, img_rows, img_cols, batch_size, max_p
             image_red = imread(file[0])
             image_green = imread(file[1])
             image_blue = imread(file[2])
-            image_nir = imread(file[3])
+            #image_nir = imread(file[3])
 
-            image = np.stack((image_red, image_green, image_blue, image_nir), axis=-1)
+            #image = np.stack((image_red, image_green, image_blue, image_nir), axis=-1)
+            image = np.stack((image_red, image_green, image_blue), axis=-1)
 
             image = resize (image, ( img_rows, img_cols), preserve_range=True, mode='symmetric')
 
@@ -141,7 +144,7 @@ def mybatch_generator_prediction(tstfiles, img_rows, img_cols, batch_size, max_p
         # print('counter = ', counter)
         image_list = np.array(image_list)
 
-        yield (image_list)
+        yield (image_list,)
 
         if counter == number_of_batches:
             counter = 0

@@ -18,7 +18,7 @@ def train():
                                        input_cols=in_cols,
                                        num_of_channels=num_of_channels,
                                        num_of_classes=num_of_classes)
-    model.compile(optimizer=Adam(lr=starting_learning_rate), loss=jacc_coef, metrics=[jacc_coef])
+    model.compile(optimizer=Adam(learning_rate=starting_learning_rate), loss=jacc_coef, metrics=[jacc_coef])
     # model.summary()
 
     model_checkpoint = ModelCheckpoint(weights_path, monitor='val_loss', save_best_only=True)
@@ -41,21 +41,21 @@ def train():
     print("Learning rate: ", starting_learning_rate)
     print("Batch size: ", batch_sz, "\n")
 
-    model.fit_generator(
-        generator=mybatch_generator_train(list(zip(train_img_split, train_msk_split)), in_rows, in_cols, batch_sz, max_bit),
-        steps_per_epoch=np.ceil(len(train_img_split) / batch_sz), epochs=max_num_epochs, verbose=1,
+    model.fit(
+        x=mybatch_generator_train(list(zip(train_img_split, train_msk_split)), in_rows, in_cols, batch_sz, max_bit),
+        steps_per_epoch=int(np.ceil(len(train_img_split) / batch_sz)), epochs=max_num_epochs, verbose=1,
         validation_data=mybatch_generator_validation(list(zip(val_img_split, val_msk_split)), in_rows, in_cols, batch_sz, max_bit),
-        validation_steps=np.ceil(len(val_img_split) / batch_sz),
+        validation_steps=int(np.ceil(len(val_img_split) / batch_sz)),
         callbacks=[model_checkpoint, lr_reducer, ADAMLearningRateTracker(end_learning_rate), csv_logger])
 
 
-GLOBAL_PATH = 'path to 38-cloud dataset'
+GLOBAL_PATH = '/home/sharad/38-Cloud/38-Cloud_training'
 TRAIN_FOLDER = os.path.join(GLOBAL_PATH, 'Training')
 TEST_FOLDER = os.path.join(GLOBAL_PATH, 'Test')
 
 in_rows = 192
 in_cols = 192
-num_of_channels = 4
+num_of_channels = 3
 num_of_classes = 1
 starting_learning_rate = 1e-4
 end_learning_rate = 1e-8
@@ -70,7 +70,7 @@ weights_path = os.path.join(GLOBAL_PATH, experiment_name + '.h5')
 train_resume = False
 
 # getting input images names
-train_patches_csv_name = 'training_patches_38-cloud.csv'
+train_patches_csv_name = 'training_patches_38-Cloud.csv'
 df_train_img = pd.read_csv(os.path.join(TRAIN_FOLDER, train_patches_csv_name))
 train_img, train_msk = get_input_image_names(df_train_img, TRAIN_FOLDER, if_train=True)
 

@@ -1,0 +1,13 @@
+# Ignore Jupyter notebook checkpoints
+Cloud-Net/.ipynb_checkpoints/
+
+# Ignore Python cache files
+Cloud-Net/__pycache__/
+
+# Ignore specific display scripts
+Cloud-Net/display_masks.ipynb
+Cloud-Net/display_masks.py
+
+# Ignore virtual environment directory
+cloud38venv/
+.venv/
